@@ -13,6 +13,19 @@ func (this Byte8) Less(item interface{}) bool {
 	return false //return false if equal
 }
 
+func (this Byte8) HasPrefix(item interface{}) bool {
+	prefix := item.(Byte8)
+	for i := 0; i < 8; i++ {
+		if prefix[i] == 0 {
+			return true
+		}
+		if this[i] != prefix[i] {
+			return false
+		}
+	}
+	return true
+}
+
 //Byte256 implement store.Value interface
 type Byte256 [256]byte
 
@@ -55,7 +68,8 @@ type KVReply struct {
 
 //for PrefixScan RPC
 type PrefixScanRequest struct {
-	N int
+	N      int
+	Prefix Byte8
 }
 
 type PrefixScanReply struct {

@@ -23,12 +23,14 @@ succeed.
 
 
                  )
->prefixscan 2
-password username
->delete username
+>put userxyz test111111111111111111
 succeed.
->get username
-[error] 101: 找不到
+>put user11 zzzx
+succeed.
+>put userzxc mxxxxxx
+succeed.
+>prefixscan user 3 
+user11   username userxyz
 ```
 
 ## TODO 

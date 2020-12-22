@@ -96,11 +96,18 @@ func (sk *SkipList) Delete(key store.Key) error {
 	return e.NotFound
 }
 
-//PrefixScan return the first k elements in the list, with k = min(n,len(list))
-func (sk *SkipList) PrefixScan(n int) []interface{} {
-	x := sk.first()
+//Prefixscan finds the first (up to ) n keys of the specified prefix.
+func (sk *SkipList) PrefixScan(prefix store.Key, n int) []interface{} {
+	x := sk.head
+	for i := sk.level - 1; i >= 0; i-- {
+		for x.next[i] != nil && x.next[i].key.Less(prefix) {
+			x = x.next[i]
+		}
+	}
+	//now x is the biggest element which is less than key
+	x = x.next[0]
 	var res []interface{}
-	for n > 0 && x != nil {
+	for n > 0 && x != nil && x.key.HasPrefix(prefix) {
 		res = append(res, x.key)
 		n--
 		x = x.next[0]

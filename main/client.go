@@ -13,6 +13,7 @@ type client struct {
 	method string
 	key    []byte
 	value  []byte
+	prefix []byte
 	n      int
 	stdin  *bufio.Reader
 }
@@ -42,7 +43,7 @@ func (cl *client) parse() {
 		fmt.Fscan(cl.stdin, &cl.key)
 		cl.handle(types.Mdelete)
 	case "PREFIXSCAN", "PrefixScan", "prefixscan":
-		fmt.Fscan(cl.stdin, &cl.n)
+		fmt.Fscan(cl.stdin, &cl.prefix, &cl.n)
 		cl.handle(types.MprefixScan)
 	case "q", "quit", "exit":
 		os.Exit(0)
@@ -59,6 +60,7 @@ func (cl *client) handle(m types.Method) {
 		req := &types.PrefixScanRequest{
 			N: cl.n,
 		}
+		copy(req.Prefix[:], cl.prefix)
 		reply := &types.PrefixScanReply{}
 		err := call("Server.PrefixScanCommand", req, reply)
 		if err != nil {

@@ -73,7 +73,7 @@ func (s *Server) Command(request *types.KVRequest, reply *types.KVReply) error {
 // PrefixScanCommand is a rpc function called by client
 // Handle prefixScan method
 func (s *Server) PrefixScanCommand(request *types.PrefixScanRequest, reply *types.PrefixScanReply) error {
-	keys := s.storage.PrefixScan(request.N)
+	keys := s.storage.PrefixScan(request.Prefix, request.N)
 	for _, key := range keys {
 		reply.Keys = append(reply.Keys, key.(types.Byte8))
 	}
