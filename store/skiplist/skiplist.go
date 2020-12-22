@@ -1,3 +1,5 @@
+//Package skiplist implement store.Store interface
+//The time complexity of Get,Put,Delete is O(logn) in average.
 package skiplist
 
 import (
@@ -6,6 +8,8 @@ import (
 	"woodkv/store"
 )
 
+// New create a default skiplist
+// return a pointer
 func New() *SkipList {
 	return &SkipList{
 		head:     &Element{next: make([]*Element, defaultMaxLevel)},
@@ -15,6 +19,8 @@ func New() *SkipList {
 	}
 }
 
+// Get finds an element by key.
+// return Value if found
 func (sk *SkipList) Get(key store.Key) (store.Value, error) {
 	x := sk.head
 	for i := sk.level - 1; i >= 0; i-- {
@@ -29,6 +35,9 @@ func (sk *SkipList) Get(key store.Key) (store.Value, error) {
 	}
 	return nil, e.NotFound
 }
+
+//Put inserts a value in the list with the specified key, ordered by the key
+//return nil if succeed
 func (sk *SkipList) Put(key store.Key, val store.Value) error {
 	update := make([]*Element, sk.maxLevel)
 	x := sk.head
@@ -64,6 +73,9 @@ func (sk *SkipList) Put(key store.Key, val store.Value) error {
 	sk.length++
 	return nil
 }
+
+//Delete removes a value in the list with the specified key
+//return nil if succeed
 func (sk *SkipList) Delete(key store.Key) error {
 	update := make([]*Element, sk.maxLevel)
 	x := sk.head
@@ -83,8 +95,10 @@ func (sk *SkipList) Delete(key store.Key) error {
 	}
 	return e.NotFound
 }
+
+//PrefixScan return the first k elements in the list, with k = min(n,len(list))
 func (sk *SkipList) PrefixScan(n int) []interface{} {
-	x := sk.First()
+	x := sk.first()
 	var res []interface{}
 	for n > 0 && x != nil {
 		res = append(res, x.key)
@@ -101,6 +115,6 @@ func (sk *SkipList) randomLevel() int {
 	return level
 }
 
-func (sk *SkipList) First() *Element {
+func (sk *SkipList) first() *Element {
 	return sk.head.next[0]
 }

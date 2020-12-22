@@ -34,7 +34,7 @@ succeed.
 ## TODO 
 
 - [ ] testing
-- [ ] persistent  
+- [ ] persistence 
 
 ## Why SkipList?
 Simple

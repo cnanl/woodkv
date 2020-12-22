@@ -36,7 +36,8 @@ func (s *Server) serve() {
 	select {}
 }
 
-//Command is called by client
+//Command is a rpc function called by client
+//Handle Get, Put, Delete
 func (s *Server) Command(request *types.KVRequest, reply *types.KVReply) error {
 	var err error
 	var val store.Value
@@ -69,6 +70,8 @@ func (s *Server) Command(request *types.KVRequest, reply *types.KVReply) error {
 	return err
 }
 
+// PrefixScanCommand is a rpc function called by client
+// Handle prefixScan method
 func (s *Server) PrefixScanCommand(request *types.PrefixScanRequest, reply *types.PrefixScanReply) error {
 	keys := s.storage.PrefixScan(request.N)
 	for _, key := range keys {
